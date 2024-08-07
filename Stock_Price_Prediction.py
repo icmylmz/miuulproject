@@ -321,7 +321,7 @@ def main():
     st.sidebar.image("Data/oznur.png", width=70)
     st.sidebar.markdown("Öznür Yılmaz")
     st.sidebar.image("Data/emre.png", width=70)
-    st.sidebar.markdown("Emre Başer")
+    st.sidebar.markdown("Emre Başer: https://www.linkedin.com/in/emrebaser/")
     st.sidebar.image("Data/cem.png", width=70)
     st.sidebar.markdown("İ. Cem Yılmaz")
 
