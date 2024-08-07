@@ -357,6 +357,9 @@ def main():
             df = yf.download(ticker, period="5y")
             if df.empty:
                 modelling_tab.error(f"{ticker} için veri bulunamadı. Lütfen en az 5 yıllık arz geçmişi olan geçerli bir hisse senedi sembolü giriniz.")
+                graph_tab.error(f"{ticker} için veri bulunamadı. Lütfen en az 5 yıllık arz geçmişi olan geçerli bir hisse senedi sembolü giriniz.")
+                prediction_tab.error(f"{ticker} için veri bulunamadı. Lütfen en az 5 yıllık arz geçmişi olan geçerli bir hisse senedi sembolü giriniz.")
+                st.sidebar.error(f"{ticker} için veri bulunamadı. Lütfen en az 5 yıllık arz geçmişi olan geçerli bir hisse senedi sembolü giriniz.")
             else:
                 graph_tab.subheader("Veri Kümesi")
                 graph_tab.write(df.head())
