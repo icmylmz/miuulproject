@@ -277,14 +277,14 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
             'n_estimators': [50, 100, 200],
             'learning_rate': [0.1, 0.05],
             'max_depth': [3, 4, 5],
-            silent': 1
+            'silent': 1
         },
         "LightGBM": {
             'n_estimators': [50, 100, 200],
             'learning_rate': [0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5,10]
+            'max_depth': [3, 4, 5]
         },
-        "CatBoost": {'iterations': [50, 100, 200,500],
+        "CatBoost": {'iterations': [50, 100, 200],
                      'learning_rate': [0.01, 0.1, 0.05],
                      'depth': [3, 4, 5]
         },
