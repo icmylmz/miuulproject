@@ -256,7 +256,7 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
     param_grids = {
         "RandomForest": {
             'n_estimators': [50, 100, 200],
-            'max_depth': [None, 10, 20, 30],
+            'max_depth': [None, 10, 20],
             #'min_samples_split': [2, 5,10]
         },
         "GradientBoosting": {
@@ -266,7 +266,7 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
         },
         "Cart": {
             'max_depth': [None, 10, 20, 30],
-            '#min_samples_split': [2, 5, 10]
+            #'min_samples_split': [2, 5, 10]
         },
         "XGBRegressor": {
             'n_estimators': [50, 100, 200],
