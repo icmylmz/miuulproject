@@ -12,7 +12,7 @@ from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from catboost import CatBoostRegressor
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 
@@ -58,13 +58,6 @@ def future(df):
     return future_df
 
 
-def close (df):
-    dff = df.copy()
-    dff.drop(["Open", "Volume", "High", "Low", "Close"], axis=1, inplace=True)
-
-    return dff
-
-
 def ts_decompose(y, model="additive"):
     #Datetime
     y.index = pd.to_datetime(y.index)
@@ -96,7 +89,7 @@ def ts_decompose(y, model="additive"):
     graph_tab.pyplot(fig)
 
 
-def errors (df,new_best_model):
+def deviation (df,new_best_model):
     data = df["Adj Close"].tail(30)
     df = df.iloc[:-30]
 
@@ -133,8 +126,10 @@ def errors (df,new_best_model):
         df["Adj Close"].iloc[[-1]] = tahmin_inverse
 
     mae =  mean_absolute_error(data, df["Adj Close"].iloc[-30:])
-    print("Mutlak Ortlama Hata: " , mae)
-    return mae
+    mse =  mean_squared_error(data, df["Adj Close"].iloc[-30:])
+    print("MAE: " , mae)
+    print("MSE: " , mse)
+    return mae, mse
 
 
 def feature_engineering(df):
@@ -256,83 +251,6 @@ def cv(df_copy):
         print(best_model_name)
         return result, best_model, mae_value
 
-
-def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
-    param_grids = {
-        "RandomForest": {
-            'n_estimators': [50, 100, 200,500],
-            'max_depth': [None, 10, 20, 30],
-            'min_samples_split': [2, 5, 7, 10]
-        },
-        "GradientBoosting": {
-            'n_estimators': [50, 100, 200,500],
-            'learning_rate': [0.001,0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5]
-        },
-        "Cart": {
-            'max_depth': [None, 10, 20, 30],
-            'min_samples_split': [2, 5, 10]
-        },
-        "XGBRegressor": {
-            'n_estimators': [50, 100, 200],
-            'learning_rate': [0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5,7,10]
-        },
-        "LightGBM": {
-            'n_estimators': [50, 100, 200,500],
-            'learning_rate': [0.001,0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5,7,10]
-        },
-        "CatBoost": {'iterations': [50, 100, 200,500],
-                     'learning_rate': [0.001,0.01, 0.1, 0.05],
-                     'depth': [3, 4, 5,7,10]
-        },
-
-        "AdaBoost": {'n_estimators': [50, 100, 200,500],
-                     'learning_rate': [0.001, 0.01, 0.1, 0.05]}
-    }
-
-    models = {
-        "RandomForest": RandomForestRegressor(),
-        "GradientBoosting": GradientBoostingRegressor(),
-        "Cart": DecisionTreeRegressor(),
-        "XGBRegressor": XGBRegressor(verbose=-1),
-        "LightGBM": LGBMRegressor(verbose=-1),
-        "CatBoost": CatBoostRegressor(verbose=False),
-        "AdaBoost": AdaBoostRegressor()
-    }
-
-
-    df_copy.dropna(inplace=True)
-
-    y = df_copy["Adj Close"]
-    X = df_copy.drop("Adj Close", axis=1)
-
-    best_models = {}
-    best_mae = float('inf')
-    new_best_model = None
-
-    for name, param_grid in param_grids.items():
-        model = models[name]
-        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=2, scoring='neg_mean_absolute_error',n_jobs=-1,verbose=1)
-        grid_search.fit(X, y)
-        best_model = grid_search.best_estimator_
-        best_models[name] = best_model
-
-
-        mae= -grid_search.best_score_
-
-        if mae < best_mae:
-            best_mae = mae
-            new_best_model = best_model
-
-    if mae_value < best_mae:
-        new_best_model = best_ml_model
-    print(best_models)
-    print(new_best_model)
-    return new_best_model
-
-
 def prediction(df, future_df,new_best_model):
     tahminler = []
     for time in future_df.index:
@@ -368,7 +286,7 @@ def prediction(df, future_df,new_best_model):
     return df, tahminler
 
 
-def graph(df, y_pred, future_df, ticker, mae):
+def graph(df, y_pred, future_df, ticker, mae, mse):
     y_pred = pd.Series(y_pred, index=future_df.index)
 
     # Plotly figürü oluşturma
@@ -382,7 +300,7 @@ def graph(df, y_pred, future_df, ticker, mae):
 
     # Başlık ve eksen etiketlerini ayarlama
     fig.update_layout(
-        title=f"{ticker}'s Prices and Prediction - MAE : {round(mae, 2)}",
+        title=f"{ticker}'s Prices and Prediction - MAE : {round(mae, 2)}, MSE: {round(mse,2)}",
         xaxis_title="Date",
         yaxis_title="Price",
         legend_title="Legend",
@@ -416,26 +334,22 @@ def main():
                 modelling_tab.write(df_features.head())
                 modelling_tab.write(df_features.tail())
 
-                modelling_tab.subheader("Çapraz Doğrulama ve En İyi Model Seçimi")
+                modelling_tab.subheader("En İyi Model Seçimi")
                 result, best_model, mae_value = cv(df_features)
                 modelling_tab.write(f"En İyi Model:{best_model}")
 
-                modelling_tab.subheader("Hiperparametre Optimizasyonu")
-                new_best_model = optimize_hyperparameters(df_features, mae_value, best_model)
-                modelling_tab.write(f"Optimize Edilmiş Model: {new_best_model}")
-
-                prediction_tab.subheader("Gelecek Tahminleri ve MAE Hesaplama")
-                mae = errors(df, new_best_model)
-                prediction_tab.write(f"Ortalama Mutlak Hata (MAE): {mae}")
+                prediction_tab.subheader("Gelecek Tahminleri ve Sapma Hesaplaması")
+                mae,mse = deviation(df, best_model)
+                prediction_tab.write(f"Ortalama Mutlak Hata (MAE): {mae} - MSE : {mse}")
 
                 future_df = future(df)
 
                 prediction_tab.subheader("Gelecek Tahminleri")
-                df_with_predictions, tahminler = prediction(df, future_df, new_best_model)
+                df_with_predictions, tahminler = prediction(df, future_df, best_model)
                 prediction_tab.write(pd.DataFrame({'Tarih': future_df.index, 'Tahmin Edilen Kapanış Fiyatı': tahminler}))
 
                 prediction_tab.subheader("Hisse Grafiği")
-                graph(df, tahminler, future_df, ticker,mae)
+                graph(df, tahminler, future_df, ticker,mae,mse)
         except Exception as e:
             st.error(f"Bir hata oluştu: {e}")
 
