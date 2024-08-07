@@ -316,10 +316,8 @@ def main():
     ticker = st.sidebar.text_input("Hisse Senedi Sembol Kodu")
     st.sidebar.markdown("Örneğin Apple hisse senedi için 'AAPL', Tüpraş hisse senedi için 'TUPRS.IS' giriniz. ")
     st.sidebar.title("Ekibimiz")
-with st.sidebar:
     st.sidebar.image("Data/cicek.png", width=70) 
-    st.write("---")  # Ayırıcı çizgi
-    st.markdown(
+    st.sidebar.markdown(
         """
         <a href="https://www.linkedin.com/in/%C3%A7i%C3%A7ek-%C3%BCst%C3%BCn-5a598720b/" target="_blank" style="text-decoration: none; color: white;">
             Çiçek Üstün
