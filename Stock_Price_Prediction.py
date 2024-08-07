@@ -12,7 +12,7 @@ from sklearn.tree import DecisionTreeRegressor
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
 from catboost import CatBoostRegressor
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 
@@ -126,8 +126,10 @@ def deviation (df,new_best_model):
         df["Adj Close"].iloc[[-1]] = tahmin_inverse
 
     mae =  mean_absolute_error(data, df["Adj Close"].iloc[-30:])
-    print("Mutlak Ortlama Hata: " , mae)
-    return mae
+    mse =  mean_squared_error(data, df["Adj Close"].iloc[-30:])
+    print("MAE: " , mae)
+    print("MSE: " , mse)
+    return mae, mse
 
 
 def feature_engineering(df):
@@ -255,34 +257,34 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
         "RandomForest": {
             'n_estimators': [50, 100, 200],
             'max_depth': [None, 10, 20, 30],
-            'min_samples_split': [2, 5,10]
+            #'min_samples_split': [2, 5,10]
         },
         "GradientBoosting": {
             'n_estimators': [50, 100, 200],
             'learning_rate': [0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5]
+            #'max_depth': [3, 4, 5]
         },
         "Cart": {
             'max_depth': [None, 10, 20, 30],
-            'min_samples_split': [2, 5, 10]
+            '#min_samples_split': [2, 5, 10]
         },
         "XGBRegressor": {
             'n_estimators': [50, 100, 200],
             'learning_rate': [0.1, 0.05],
-            'max_depth': [3, 4, 5]
+            #'max_depth': [3, 4, 5]
         },
         "LightGBM": {
             'n_estimators': [50, 100, 200],
             'learning_rate': [0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5]
+            #'max_depth': [3, 4, 5]
         },
         "CatBoost": {'iterations': [50, 100, 200],
                      'learning_rate': [0.01, 0.1, 0.05],
-                     'depth': [3, 4, 5]
+                     #'depth': [3, 4, 5]
         },
 
         "AdaBoost": {'n_estimators': [50, 100, 200],
-                     'learning_rate': [0.01, 0.1, 0.05]}
+                     #'learning_rate': [0.01, 0.1, 0.05]}
     }
 
     models = {
@@ -361,7 +363,7 @@ def prediction(df, future_df,new_best_model):
     return df, tahminler
 
 
-def graph(df, y_pred, future_df, ticker, mae):
+def graph(df, y_pred, future_df, ticker, mae, mse):
     y_pred = pd.Series(y_pred, index=future_df.index)
 
     # Plotly figürü oluşturma
@@ -375,7 +377,7 @@ def graph(df, y_pred, future_df, ticker, mae):
 
     # Başlık ve eksen etiketlerini ayarlama
     fig.update_layout(
-        title=f"{ticker}'s Prices and Prediction - MAE : {round(mae, 2)}",
+        title=f"{ticker}'s Prices and Prediction - MAE : {round(mae, 2)}, MSE: {round(mse,2)}",
         xaxis_title="Date",
         yaxis_title="Price",
         legend_title="Legend",
@@ -418,8 +420,8 @@ def main():
                 modelling_tab.write(f"Optimize Edilmiş Model: {new_best_model}")
 
                 prediction_tab.subheader("Gelecek Tahminleri ve MAE Hesaplama")
-                mae = deviation(df, new_best_model)
-                prediction_tab.write(f"Ortalama Mutlak Hata (MAE): {mae}")
+                mae,mse = deviation(df, new_best_model)
+                prediction_tab.write(f"Ortalama Mutlak Hata (MAE): {mae} - MSE : {mse}")
 
                 future_df = future(df)
 
@@ -428,7 +430,7 @@ def main():
                 prediction_tab.write(pd.DataFrame({'Tarih': future_df.index, 'Tahmin Edilen Kapanış Fiyatı': tahminler}))
 
                 prediction_tab.subheader("Hisse Grafiği")
-                graph(df, tahminler, future_df, ticker,mae)
+                graph(df, tahminler, future_df, ticker,mae,mse)
         except Exception as e:
             st.error(f"Bir hata oluştu: {e}")
 
