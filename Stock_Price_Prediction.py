@@ -315,7 +315,7 @@ def main():
     st.sidebar.header("Kullanıcı Girişi")
     ticker = st.sidebar.text_input("Hisse Senedi Sembol Kodu")
     st.sidebar.markdown("Örneğin Apple hisse senedi için 'AAPL', Tüpraş hisse senedi için 'TUPRS.IS' giriniz. ")
-    st.sidebar.image("Data/cicek.png", width=100)
+    st.sidebar.image("Data/cicek.png", width=80)
 
     if ticker:
         try:
