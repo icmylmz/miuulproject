@@ -325,11 +325,29 @@ def main():
         """, unsafe_allow_html=True
     )
     st.sidebar.image("Data/oznur.png", width=70)
-    st.sidebar.markdown("Öznur Yılmaz: https://www.linkedin.com/in/%C3%B6znur-y%C4%B1lmaz-048649203/")
+    st.sidebar.markdown(
+        """
+        <a href="https://www.linkedin.com/in/%C3%B6znur-y%C4%B1lmaz-048649203/" target="_blank" style="text-decoration: none; color: white;">
+            Öznur Yılmaz
+        </a>
+        """, unsafe_allow_html=True
+    )
     st.sidebar.image("Data/emre.png", width=70)
-    st.sidebar.markdown("Emre Başer: https://www.linkedin.com/in/emrebaser/")
+    st.sidebar.markdown(
+        """
+        <a href="https://www.linkedin.com/in/emrebaser/" target="_blank" style="text-decoration: none; color: white;">
+            Emre Başer
+        </a>
+        """, unsafe_allow_html=True
+    )
     st.sidebar.image("Data/cem.png", width=70)
-    st.sidebar.markdown("İ. Cem Yılmaz: https://www.linkedin.com/in/i-cem-yilmaz-0a5b7b22b/")
+    st.sidebar.markdown(
+        """
+        <a href="https://www.linkedin.com/in/i-cem-yilmaz-0a5b7b22b/" target="_blank" style="text-decoration: none; color: white;">
+            İ. Cem Yılmaz
+        </a>
+        """, unsafe_allow_html=True
+    )
 
     if ticker:
         try:
