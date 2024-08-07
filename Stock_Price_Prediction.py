@@ -317,10 +317,13 @@ def main():
     st.sidebar.markdown("Örneğin Apple hisse senedi için 'AAPL', Tüpraş hisse senedi için 'TUPRS.IS' giriniz. ")
     st.sidebar.title("Ekibimiz")
     st.sidebar.image("Data/cicek.png", width=70) 
-    st.markdown("Çiçek Üstün")
+    st.sidebar.markdown("Çiçek Üstün")
     st.sidebar.image("Data/oznur.png", width=70)
+    st.sidebar.markdown("Öznür Yılmaz")
     st.sidebar.image("Data/emre.png", width=70)
+    st.sidebar.markdown("Emre Başer")
     st.sidebar.image("Data/cem.png", width=70)
+    st.sidebar.markdown("İ. Cem Yılmaz")
 
     if ticker:
         try:
