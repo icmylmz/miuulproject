@@ -318,10 +318,11 @@ def main():
     st.sidebar.title("Ekibimiz")
     st.sidebar.image("Data/cicek.png", width=70) 
 with st.sidebar:
+    st.write("---")  # Ayırıcı çizgi
     st.markdown(
         """
-        <a href="https://www.linkedin.com/in/%C3%A7i%C3%A7ek-%C3%BCst%C3%BCn-5a598720b/" target="_blank" style="text-decoration: none;">
-            <h4>Çiçek Üstün</h4>
+        <a href="https://www.linkedin.com/in/%C3%A7i%C3%A7ek-%C3%BCst%C3%BCn-5a598720b/" target="_blank" style="text-decoration: none; color: black;">
+            Çiçek Üstün
         </a>
         """, unsafe_allow_html=True
     )
