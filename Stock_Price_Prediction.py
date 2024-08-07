@@ -284,7 +284,8 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
         },
 
         "AdaBoost": {'n_estimators': [50, 100, 200],
-                     #'learning_rate': [0.01, 0.1, 0.05]}
+                     #'learning_rate': [0.01, 0.1, 0.05]
+                    }
     }
 
     models = {
