@@ -58,13 +58,6 @@ def future(df):
     return future_df
 
 
-def close (df):
-    dff = df.copy()
-    dff.drop(["Open", "Volume", "High", "Low", "Close"], axis=1, inplace=True)
-
-    return dff
-
-
 def ts_decompose(y, model="additive"):
     #Datetime
     y.index = pd.to_datetime(y.index)
@@ -96,7 +89,7 @@ def ts_decompose(y, model="additive"):
     graph_tab.pyplot(fig)
 
 
-def errors (df,new_best_model):
+def deviation (df,new_best_model):
     data = df["Adj Close"].tail(30)
     df = df.iloc[:-30]
 
@@ -425,7 +418,7 @@ def main():
                 modelling_tab.write(f"Optimize Edilmiş Model: {new_best_model}")
 
                 prediction_tab.subheader("Gelecek Tahminleri ve MAE Hesaplama")
-                mae = errors(df, new_best_model)
+                mae = deviation(df, new_best_model)
                 prediction_tab.write(f"Ortalama Mutlak Hata (MAE): {mae}")
 
                 future_df = future(df)
