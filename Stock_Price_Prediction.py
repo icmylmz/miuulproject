@@ -325,6 +325,7 @@ def main():
         """, unsafe_allow_html=True
     )
     st.sidebar.image("Data/oznur.png", width=70)
+    st.sidebar.write(-------)
     st.sidebar.markdown(
         """
         <a href="https://www.linkedin.com/in/%C3%B6znur-y%C4%B1lmaz-048649203/" target="_blank" style="text-decoration: none; color: white;">
