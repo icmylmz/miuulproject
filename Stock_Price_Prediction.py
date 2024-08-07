@@ -338,8 +338,8 @@ def main():
                 result, best_model, mae_value = cv(df_features)
                 modelling_tab.write(f"En İyi Model:{best_model}")
 
-                prediction_tab.subheader("Gelecek Tahminleri ve MAE Hesaplama")
-                mae,mse = deviation(df, new_best_model)
+                prediction_tab.subheader("Gelecek Tahminleri ve Sapma Hesaplaması")
+                mae,mse = deviation(df, best_model)
                 prediction_tab.write(f"Ortalama Mutlak Hata (MAE): {mae} - MSE : {mse}")
 
                 future_df = future(df)
