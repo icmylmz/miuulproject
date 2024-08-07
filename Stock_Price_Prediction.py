@@ -260,13 +260,13 @@ def cv(df_copy):
 def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
     param_grids = {
         "RandomForest": {
-            'n_estimators': [50, 100, 200,500],
+            'n_estimators': [50, 100, 200],
             'max_depth': [None, 10, 20, 30],
-            'min_samples_split': [2, 5, 7, 10]
+            'min_samples_split': [2, 5,10]
         },
         "GradientBoosting": {
-            'n_estimators': [50, 100, 200,500],
-            'learning_rate': [0.001,0.01, 0.1, 0.05],
+            'n_estimators': [50, 100, 200],
+            'learning_rate': [0.01, 0.1, 0.05],
             'max_depth': [3, 4, 5]
         },
         "Cart": {
@@ -275,21 +275,22 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
         },
         "XGBRegressor": {
             'n_estimators': [50, 100, 200],
-            'learning_rate': [0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5,7,10]
+            'learning_rate': [0.1, 0.05],
+            'max_depth': [3, 4, 5],
+            silent': 1
         },
         "LightGBM": {
-            'n_estimators': [50, 100, 200,500],
-            'learning_rate': [0.001,0.01, 0.1, 0.05],
-            'max_depth': [3, 4, 5,7,10]
+            'n_estimators': [50, 100, 200],
+            'learning_rate': [0.01, 0.1, 0.05],
+            'max_depth': [3, 4, 5,10]
         },
         "CatBoost": {'iterations': [50, 100, 200,500],
-                     'learning_rate': [0.001,0.01, 0.1, 0.05],
-                     'depth': [3, 4, 5,7,10]
+                     'learning_rate': [0.01, 0.1, 0.05],
+                     'depth': [3, 4, 5]
         },
 
-        "AdaBoost": {'n_estimators': [50, 100, 200,500],
-                     'learning_rate': [0.001, 0.01, 0.1, 0.05]}
+        "AdaBoost": {'n_estimators': [50, 100, 200],
+                     'learning_rate': [0.01, 0.1, 0.05]}
     }
 
     models = {
