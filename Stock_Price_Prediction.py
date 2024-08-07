@@ -316,10 +316,18 @@ def main():
     ticker = st.sidebar.text_input("Hisse Senedi Sembol Kodu")
     st.sidebar.markdown("Örneğin Apple hisse senedi için 'AAPL', Tüpraş hisse senedi için 'TUPRS.IS' giriniz. ")
     st.sidebar.title("Ekibimiz")
-    st.sidebar.image("Data/cicek.png", width=70)
-    st.sidebar.image("Data/oznur.png", width=70)
-    st.sidebar.image("Data/emre.png", width=70)
-    st.sidebar.image("Data/cem.png", width=70)
+    with st.sidebar:
+    st.markdown(
+        """
+        <div style='text-align: center;'>
+            <img src='Data/cicek.png' width='70'>
+        </div>
+        """, unsafe_allow_html=True
+    )
+    #st.sidebar.image("Data/cicek.png", width=70)
+    #st.sidebar.image("Data/oznur.png", width=70)
+    #st.sidebar.image("Data/emre.png", width=70)
+    #st.sidebar.image("Data/cem.png", width=70)
 
     if ticker:
         try:
