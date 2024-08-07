@@ -317,7 +317,14 @@ def main():
     st.sidebar.markdown("Örneğin Apple hisse senedi için 'AAPL', Tüpraş hisse senedi için 'TUPRS.IS' giriniz. ")
     st.sidebar.title("Ekibimiz")
     st.sidebar.image("Data/cicek.png", width=70) 
-    st.sidebar.markdown("Çiçek Üstün: https://www.linkedin.com/in/%C3%A7i%C3%A7ek-%C3%BCst%C3%BCn-5a598720b/")
+with st.sidebar:
+    st.markdown(
+        """
+        <a href="https://www.linkedin.com/in/%C3%A7i%C3%A7ek-%C3%BCst%C3%BCn-5a598720b/" target="_blank" style="text-decoration: none;">
+            <h4>Çiçek Üstün</h4>
+        </a>
+        """, unsafe_allow_html=True
+    )
     st.sidebar.image("Data/oznur.png", width=70)
     st.sidebar.markdown("Öznur Yılmaz: https://www.linkedin.com/in/%C3%B6znur-y%C4%B1lmaz-048649203/")
     st.sidebar.image("Data/emre.png", width=70)
