@@ -324,8 +324,8 @@ def main():
         </a>
         """, unsafe_allow_html=True
     )
-    st.sidebar.image("Data/oznur.png", width=70)
-    st.sidebar.write(-------)
+    st.sidebar.write("-------")
+    st.sidebar.image("Data/oznur.png", width=70)    
     st.sidebar.markdown(
         """
         <a href="https://www.linkedin.com/in/%C3%B6znur-y%C4%B1lmaz-048649203/" target="_blank" style="text-decoration: none; color: white;">
@@ -333,6 +333,7 @@ def main():
         </a>
         """, unsafe_allow_html=True
     )
+    st.sidebar.write("-------")
     st.sidebar.image("Data/emre.png", width=70)
     st.sidebar.markdown(
         """
@@ -341,6 +342,7 @@ def main():
         </a>
         """, unsafe_allow_html=True
     )
+    st.sidebar.write("-------")
     st.sidebar.image("Data/cem.png", width=70)
     st.sidebar.markdown(
         """
