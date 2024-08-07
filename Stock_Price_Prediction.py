@@ -310,7 +310,7 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
 
     for name, param_grid in param_grids.items():
         model = models[name]
-        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=2, scoring='neg_mean_absolute_error',n_jobs=-1,verbose=1)
+        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=2, scoring='neg_mean_absolute_error',n_jobs=2,verbose=1)
         grid_search.fit(X, y)
         best_model = grid_search.best_estimator_
         best_models[name] = best_model
