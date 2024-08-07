@@ -251,84 +251,6 @@ def cv(df_copy):
         print(best_model_name)
         return result, best_model, mae_value
 
-
-def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
-    param_grids = {
-        "RandomForest": {
-            'n_estimators': [50, 100, 200],
-            'max_depth': [None, 10, 20],
-            #'min_samples_split': [2, 5,10]
-        },
-        "GradientBoosting": {
-            'n_estimators': [50, 100, 200],
-            'learning_rate': [0.01, 0.1, 0.05],
-            #'max_depth': [3, 4, 5]
-        },
-        "Cart": {
-            'max_depth': [None, 10, 20, 30],
-            #'min_samples_split': [2, 5, 10]
-        },
-        "XGBRegressor": {
-            'n_estimators': [50, 100, 200],
-            'learning_rate': [0.1, 0.05],
-            #'max_depth': [3, 4, 5]
-        },
-        "LightGBM": {
-            'n_estimators': [50, 100, 200],
-            'learning_rate': [0.01, 0.1, 0.05],
-            #'max_depth': [3, 4, 5]
-        },
-        "CatBoost": {'iterations': [50, 100, 200],
-                     'learning_rate': [0.01, 0.1, 0.05],
-                     #'depth': [3, 4, 5]
-        },
-
-        "AdaBoost": {'n_estimators': [50, 100, 200],
-                     #'learning_rate': [0.01, 0.1, 0.05]
-                    }
-    }
-
-    models = {
-        "RandomForest": RandomForestRegressor(),
-        "GradientBoosting": GradientBoostingRegressor(),
-        "Cart": DecisionTreeRegressor(),
-        "XGBRegressor": XGBRegressor(verbose=-1),
-        "LightGBM": LGBMRegressor(verbose=-1),
-        "CatBoost": CatBoostRegressor(verbose=False),
-        "AdaBoost": AdaBoostRegressor()
-    }
-
-
-    df_copy.dropna(inplace=True)
-
-    y = df_copy["Adj Close"]
-    X = df_copy.drop("Adj Close", axis=1)
-
-    best_models = {}
-    best_mae = float('inf')
-    new_best_model = None
-
-    for name, param_grid in param_grids.items():
-        model = models[name]
-        grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=2, scoring='neg_mean_absolute_error',n_jobs=2,verbose=1)
-        grid_search.fit(X, y)
-        best_model = grid_search.best_estimator_
-        best_models[name] = best_model
-
-
-        mae= -grid_search.best_score_
-
-        if mae < best_mae:
-            best_mae = mae
-            new_best_model = best_model
-
-    if mae_value < best_mae:
-        new_best_model = best_ml_model
-    print(best_models)
-    print(new_best_model)
-    return new_best_model
-
-
 def prediction(df, future_df,new_best_model):
     tahminler = []
     for time in future_df.index:
@@ -412,13 +334,9 @@ def main():
                 modelling_tab.write(df_features.head())
                 modelling_tab.write(df_features.tail())
 
-                modelling_tab.subheader("Çapraz Doğrulama ve En İyi Model Seçimi")
+                modelling_tab.subheader("En İyi Model Seçimi")
                 result, best_model, mae_value = cv(df_features)
                 modelling_tab.write(f"En İyi Model:{best_model}")
-
-                modelling_tab.subheader("Hiperparametre Optimizasyonu")
-                new_best_model = optimize_hyperparameters(df_features, mae_value, best_model)
-                modelling_tab.write(f"Optimize Edilmiş Model: {new_best_model}")
 
                 prediction_tab.subheader("Gelecek Tahminleri ve MAE Hesaplama")
                 mae,mse = deviation(df, new_best_model)
@@ -427,7 +345,7 @@ def main():
                 future_df = future(df)
 
                 prediction_tab.subheader("Gelecek Tahminleri")
-                df_with_predictions, tahminler = prediction(df, future_df, new_best_model)
+                df_with_predictions, tahminler = prediction(df, future_df, best_model)
                 prediction_tab.write(pd.DataFrame({'Tarih': future_df.index, 'Tahmin Edilen Kapanış Fiyatı': tahminler}))
 
                 prediction_tab.subheader("Hisse Grafiği")
