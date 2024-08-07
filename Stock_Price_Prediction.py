@@ -276,8 +276,7 @@ def optimize_hyperparameters(df_copy,mae_value,best_ml_model):
         "XGBRegressor": {
             'n_estimators': [50, 100, 200],
             'learning_rate': [0.1, 0.05],
-            'max_depth': [3, 4, 5],
-            'silent': 1
+            'max_depth': [3, 4, 5]
         },
         "LightGBM": {
             'n_estimators': [50, 100, 200],
